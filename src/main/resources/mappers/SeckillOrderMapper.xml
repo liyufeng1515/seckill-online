@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dwyane.seckillonline.model.dao.SeckillOrderMapper">
+  <resultMap id="BaseResultMap" type="cn.dwyane.seckillonline.model.entity.SeckillOrder">
+    <id column="order_id" jdbcType="BIGINT" property="orderId" />
+    <result column="product_id" jdbcType="BIGINT" property="productId" />
+    <result column="quantity" jdbcType="INTEGER" property="quantity" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="grand_total" jdbcType="BIGINT" property="grandTotal" />
+    <result column="created_stamp" jdbcType="TIMESTAMP" property="createdStamp" />
+    <result column="last_updated_stamp" jdbcType="TIMESTAMP" property="lastUpdatedStamp" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    order_id, product_id, quantity, created_by, grand_total, created_stamp, last_updated_stamp
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from seckill_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from seckill_order
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.dwyane.seckillonline.model.entity.SeckillOrder">
+    insert into seckill_order (order_id, product_id, quantity, 
+      created_by, grand_total, created_stamp, 
+      last_updated_stamp)
+    values (#{orderId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, #{quantity,jdbcType=INTEGER}, 
+      #{createdBy,jdbcType=VARCHAR}, #{grandTotal,jdbcType=BIGINT}, #{createdStamp,jdbcType=TIMESTAMP}, 
+      #{lastUpdatedStamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.dwyane.seckillonline.model.entity.SeckillOrder">
+    insert into seckill_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="createdBy != null">
+        created_by,
+      </if>
+      <if test="grandTotal != null">
+        grand_total,
+      </if>
+      <if test="createdStamp != null">
+        created_stamp,
+      </if>
+      <if test="lastUpdatedStamp != null">
+        last_updated_stamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null">
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="grandTotal != null">
+        #{grandTotal,jdbcType=BIGINT},
+      </if>
+      <if test="createdStamp != null">
+        #{createdStamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdatedStamp != null">
+        #{lastUpdatedStamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.dwyane.seckillonline.model.entity.SeckillOrder">
+    update seckill_order
+    <set>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="quantity != null">
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null">
+        created_by = #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="grandTotal != null">
+        grand_total = #{grandTotal,jdbcType=BIGINT},
+      </if>
+      <if test="createdStamp != null">
+        created_stamp = #{createdStamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdatedStamp != null">
+        last_updated_stamp = #{lastUpdatedStamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.dwyane.seckillonline.model.entity.SeckillOrder">
+    update seckill_order
+    set product_id = #{productId,jdbcType=BIGINT},
+      quantity = #{quantity,jdbcType=INTEGER},
+      created_by = #{createdBy,jdbcType=VARCHAR},
+      grand_total = #{grandTotal,jdbcType=BIGINT},
+      created_stamp = #{createdStamp,jdbcType=TIMESTAMP},
+      last_updated_stamp = #{lastUpdatedStamp,jdbcType=TIMESTAMP}
+    where order_id = #{orderId,jdbcType=BIGINT}
+  </update>
+</mapper>

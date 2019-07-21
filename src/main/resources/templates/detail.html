@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/layui.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+</head>
+<body>
+<div class="content content-nav-base datails-content">
+    <div class="data-cont-wrap w1200">
+        <div class="product-intro layui-clear">
+            <div class="preview-wrap">
+                <a href="javascript:;"><img height="400px" width="400px" th:src="${product.imgUrl}"></a>
+            </div>
+            <div class="itemInfo-wrap">
+                <div class="itemInfo">
+                    <div class="title">
+                        <h4 th:text="${product.productName}"></h4>
+                        <div>&nbsp;</div>
+                        <h5 th:text="${product.description}"></h5>
+                    </div>
+                    <div class="summary">
+                        <p class="reference"><span>参考价</span> <i>￥</i>
+                            <del th:text="${product.unitPrice}"></del>
+                        </p>
+                        <p class="activity"><span>活动价</span><i>￥</i><strong class="price"
+                                                                            th:text="${product.unitPrice}">99.00</strong>
+                        </p>
+                    </div>
+                    <div class="choose-attrs">
+                        <div class="color layui-clear"><span class="title">颜&nbsp;&nbsp;&nbsp;&nbsp;色</span>
+                            <div class="color-cont"><span class="btn active">白色</span></div>
+                        </div>
+                        <div class="number layui-clear"><span class="title">数&nbsp;&nbsp;&nbsp;&nbsp;量</span>
+                            <div class="number-cont"><span class="cut btn">-</span><input maxlength="4" type="" name=""
+                                                                                          value="1"><span
+                                    class="add btn">+</span></div>
+                        </div>
+                    </div>
+                    <div class="choose-btns">
+                        <button id="createButton" class="layui-btn layui-btn-primary purchase-btn" onclick="createOrder()">立刻购买</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function createOrder() {
+        var productId = [[${product.productId}]];
+        alert("立即购买");
+        //前端控制,多次提交
+        $("#createButton").attr('disabled',true);
+        setTimeout(function () {
+            $("#createButton").removeAttr('disabled');
+        },5000);
+        $.ajax({
+            url: "createOrder",
+            data: {
+                productId: productId,
+                quantity: 1,
+            },
+            complete: function (XMLHttpRequest,textStatus) {
+                if('true'==XMLHttpRequest.responseText){
+                    alert('购买成功');
+                }else{
+                    alert('购买失败');
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

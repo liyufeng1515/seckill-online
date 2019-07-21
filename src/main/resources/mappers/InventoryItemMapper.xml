@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dwyane.seckillonline.model.dao.InventoryItemMapper">
+  <resultMap id="BaseResultMap" type="cn.dwyane.seckillonline.model.entity.InventoryItem">
+    <id column="inventory_item_id" jdbcType="BIGINT" property="inventoryItemId" />
+    <result column="product_id" jdbcType="BIGINT" property="productId" />
+    <result column="quantity_total" jdbcType="BIGINT" property="quantityTotal" />
+    <result column="created_stamp" jdbcType="TIMESTAMP" property="createdStamp" />
+    <result column="last_updated_stamp" jdbcType="TIMESTAMP" property="lastUpdatedStamp" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    inventory_item_id, product_id, quantity_total, created_stamp, last_updated_stamp
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from inventory_item
+    where inventory_item_id = #{inventoryItemId,jdbcType=BIGINT}
+  </select>
+  <select id="selectByProductId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from inventory_item
+    where product_id = #{product_id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from inventory_item
+    where inventory_item_id = #{inventoryItemId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="cn.dwyane.seckillonline.model.entity.InventoryItem">
+    insert into inventory_item (inventory_item_id, product_id, quantity_total, 
+      created_stamp, last_updated_stamp)
+    values (#{inventoryItemId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, #{quantityTotal,jdbcType=BIGINT}, 
+      #{createdStamp,jdbcType=TIMESTAMP}, #{lastUpdatedStamp,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.dwyane.seckillonline.model.entity.InventoryItem">
+    insert into inventory_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="inventoryItemId != null">
+        inventory_item_id,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="quantityTotal != null">
+        quantity_total,
+      </if>
+      <if test="createdStamp != null">
+        created_stamp,
+      </if>
+      <if test="lastUpdatedStamp != null">
+        last_updated_stamp,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="inventoryItemId != null">
+        #{inventoryItemId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="quantityTotal != null">
+        #{quantityTotal,jdbcType=BIGINT},
+      </if>
+      <if test="createdStamp != null">
+        #{createdStamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdatedStamp != null">
+        #{lastUpdatedStamp,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.dwyane.seckillonline.model.entity.InventoryItem">
+    update inventory_item
+    <set>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="quantityTotal != null">
+        quantity_total = #{quantityTotal,jdbcType=BIGINT},
+      </if>
+      <if test="createdStamp != null">
+        created_stamp = #{createdStamp,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdatedStamp != null">
+        last_updated_stamp = #{lastUpdatedStamp,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where inventory_item_id = #{inventoryItemId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.dwyane.seckillonline.model.entity.InventoryItem">
+    update inventory_item
+    set product_id = #{productId,jdbcType=BIGINT},
+      quantity_total = #{quantityTotal,jdbcType=BIGINT},
+      created_stamp = #{createdStamp,jdbcType=TIMESTAMP},
+      last_updated_stamp = #{lastUpdatedStamp,jdbcType=TIMESTAMP}
+    where inventory_item_id = #{inventoryItemId,jdbcType=BIGINT}
+  </update>
+  <!--乐观锁防止超卖-->
+  <update id="deductInventoryItem">
+    update inventory_item
+    set quantity_total = quantity_total - #{quantity,jdbcType=BIGINT}
+    where product_id = #{productId} and quantity_total > 0
+  </update>
+</mapper>
