@@ -1,7 +1,6 @@
 package cn.dwyane.seckillonline.rabbitMQ;
 
 import cn.dwyane.seckillonline.service.OrderService;
-import cn.dwyane.seckillonline.service.impl.OrderServiceImpl;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
