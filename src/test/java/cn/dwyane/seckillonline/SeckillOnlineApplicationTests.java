@@ -17,18 +17,16 @@ public class SeckillOnlineApplicationTests {
     OrderService orderService;
 
     //商品编码
-    private static final long product_id = 100000;
+    private static final long productId = 100000;
 
     //模拟请求数量
-    private static final int treadNum = 200;
+    private static final int treadNum = 2000;
 
     private CountDownLatch countDownLatch = new CountDownLatch(treadNum);
 
-    @Autowired
-
     @Test
     public void contextLoads() throws InterruptedException {
-
+        Thread[] threads = new Thread[treadNum];
         for(int i=0;i < treadNum;i++){
             String userId = "testUser"+i;
             Thread thread = new Thread(new Runnable() {
@@ -39,14 +37,16 @@ public class SeckillOnlineApplicationTests {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    orderService.createOrder(product_id,1,userId);
+                    orderService.createOrder(productId,1,userId);
                 }
             });
+            threads[i] = thread;
             thread.start();
             countDownLatch.countDown();
         }
-        Thread.currentThread().join();
-
+        for(Thread thread:threads){
+            thread.join();
+        }
     }
 
 }

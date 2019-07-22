@@ -3,7 +3,6 @@ package cn.dwyane.seckillonline.service.impl;
 import cn.dwyane.seckillonline.model.dao.InventoryItemMapper;
 import cn.dwyane.seckillonline.model.dao.ProductMapper;
 import cn.dwyane.seckillonline.model.dao.SeckillOrderMapper;
-import cn.dwyane.seckillonline.model.entity.InventoryItem;
 import cn.dwyane.seckillonline.model.entity.Product;
 import cn.dwyane.seckillonline.model.entity.SeckillOrder;
 import cn.dwyane.seckillonline.service.OrderService;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -24,7 +22,8 @@ public class OrderServiceImpl implements OrderService {
     private static ConcurrentLinkedQueue concurrentLinkedQueue = null;
     static {
         concurrentLinkedQueue = new ConcurrentLinkedQueue();
-        for(int i=0;i<100;i++){
+        //暂时放开令牌限制 测试并发量
+        for(int i=0;i<200000;i++){
             concurrentLinkedQueue.offer(i);
         }
     }
@@ -43,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public boolean createOrder(long productId, Integer quantity,String userId) {
+    public boolean createOrder(long productId, int quantity,String userId) {
         //令牌机制 拿到停牌的去参与秒杀
         Object tonken = concurrentLinkedQueue.poll();
         if(tonken == null){
@@ -53,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
         //redis限制用户操作频率
         boolean setnx = stringRedisTemplate.opsForValue().setIfAbsent(userId,"用户ID",10000L,TimeUnit.MILLISECONDS);
         if(!setnx){
-            System.out.println("10秒内用户("+userId+")操作频繁,被限制.");
+            System.out.println("用户("+userId+")10秒内操作频繁,被限制.");
             return false;
         }
 
@@ -65,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
         //扣除库存
         int count = inventoryItemMapper.deductInventoryItem(productId,quantity);
         if(count !=1){
-            System.out.println("创建订单失败");
+            System.out.println("用户("+userId+")创建订单失败,库存不足.");
             return false;
         }
         SeckillOrder seckillOrder = new SeckillOrder();
@@ -79,6 +78,8 @@ public class OrderServiceImpl implements OrderService {
         seckillOrder.setQuantity(quantity);
         seckillOrder.setGrandTotal(product.getUnitPrice()*quantity);
         seckillOrderMapper.insert(seckillOrder);
+
+        //System.out.println("创建订单成功"+userId);
         System.out.println("创建订单成功"+seckillOrder.getOrderId());
         return true;
     }

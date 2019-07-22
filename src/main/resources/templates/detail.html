@@ -54,25 +54,21 @@
 <script type="text/javascript">
     function createOrder() {
         var productId = [[${product.productId}]];
-        alert("立即购买");
         //前端控制,多次提交
         $("#createButton").attr('disabled',true);
         setTimeout(function () {
             $("#createButton").removeAttr('disabled');
         },5000);
         $.ajax({
-            url: "createOrder",
+            url: "/createOrder",
             data: {
                 productId: productId,
                 quantity: 1,
+                userId:'websiteUser1'
             },
-            complete: function (XMLHttpRequest,textStatus) {
-                if('true'==XMLHttpRequest.responseText){
-                    alert('购买成功');
-                }else{
-                    alert('购买失败');
-                }
-            }
+            success:function(data){
+                alert(data);
+            },
         });
     }
 
