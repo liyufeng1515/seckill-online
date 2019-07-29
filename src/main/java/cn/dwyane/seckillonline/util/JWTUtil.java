@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class JWTUtil {
@@ -66,10 +67,6 @@ public class JWTUtil {
 //        boolean verify = verify(token);
 //
 //        System.out.println(verify);
-        ConcurrentLinkedQueue concurrentLinkedQueue = new ConcurrentLinkedQueue();
-        for(int i=0;i<1;i++){
-            concurrentLinkedQueue.offer(i);
-        }
     }
 
 }

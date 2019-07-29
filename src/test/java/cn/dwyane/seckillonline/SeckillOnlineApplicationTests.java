@@ -29,16 +29,13 @@ public class SeckillOnlineApplicationTests {
         Thread[] threads = new Thread[treadNum];
         for(int i=0;i < treadNum;i++){
             String userId = "testUser"+i;
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        countDownLatch.await();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    orderService.createOrder(productId,1,userId);
+            Thread thread = new Thread(()-> {
+                try {
+                    countDownLatch.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+                orderService.createOrder(productId,1,userId);
             });
             threads[i] = thread;
             thread.start();
